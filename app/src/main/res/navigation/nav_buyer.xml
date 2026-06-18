@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_buyer"
+    app:startDestination="@id/buyerHomeFragment">
+    <fragment
+        android:id="@+id/buyerHomeFragment"
+        android:name="com.example.seapedia.ui.buyer.BuyerHomeFragment"
+        android:label="Home" />
+
+    <fragment
+        android:id="@+id/buyerCartFragment"
+        android:name="com.example.seapedia.ui.buyer.BuyerCartFragment"
+        android:label="Cart" />
+
+    <fragment
+        android:id="@+id/buyerOrdersFragment"
+        android:name="com.example.seapedia.ui.buyer.BuyerOrdersFragment"
+        android:label="Orders" />
+
+    <fragment
+        android:id="@+id/buyerProfileFragment"
+        android:name="com.example.seapedia.ui.buyer.BuyerProfileFragment"
+        android:label="Profile" />
+</navigation>

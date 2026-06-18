@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/buyerHomeFragment"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/buyerCartFragment"
+        android:title="Cart" />
+
+    <item
+        android:id="@+id/buyerOrdersFragment"
+        android:title="Orders" />
+
+    <item
+        android:id="@+id/buyerProfileFragment"
+        android:title="Profile" />
+
+</menu>

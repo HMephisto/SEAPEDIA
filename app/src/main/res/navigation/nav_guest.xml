@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_guest"
+    app:startDestination="@id/guestHomeFragment">
+
+    <fragment
+        android:id="@+id/guestHomeFragment"
+        android:name="com.example.seapedia.ui.guest.GuestHomeFragment"
+        android:label="Home" />
+
+    <fragment
+        android:id="@+id/guestExploreFragment"
+        android:name="com.example.seapedia.ui.guest.GuestExploreFragment"
+        android:label="Explore" />
+
+    <fragment
+        android:id="@+id/guestAccountFragment"
+        android:name="com.example.seapedia.ui.guest.GuestAccountFragment"
+        android:label="Account" />
+
+</navigation>

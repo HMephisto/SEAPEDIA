@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/sellerDashboardFragment"
+        android:title="Dashboard" />
+
+    <item
+        android:id="@+id/sellerInventoryFragment"
+        android:title="Inventory" />
+
+    <item
+        android:id="@+id/sellerOrdersFragment"
+        android:title="Orders" />
+    <item
+        android:id="@+id/sellerSettingsFragment"
+        android:title="Settings" />
+</menu>
