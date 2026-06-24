@@ -12,6 +12,14 @@ data class LoginResponse(
     val token: String
 )
 
+data class SwitchRoleRequest(
+    val role: String
+)
+
+data class SwitchRoleResponse(
+    val user: User
+)
+
 data class User(
     val id: Int,
     @SerializedName("full_name") val fullName: String,

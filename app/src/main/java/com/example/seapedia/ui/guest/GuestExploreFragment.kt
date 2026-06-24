@@ -1,60 +1,129 @@
 package com.example.seapedia.ui.guest
 
+import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.seapedia.R
+import com.example.seapedia.data.network.ApiClient
+import com.example.seapedia.data.repositrory.GuestRepository
+import com.example.seapedia.data.utils.SessionManager
+import com.example.seapedia.databinding.FragmentGuestExploreBinding
+import com.example.seapedia.ui.guest.adapter.GuestExploreViewModel
+import com.example.seapedia.ui.guest.adapter.GuestExploreViewModelFactory
+import com.example.seapedia.ui.guest.adapter.ProductGridAdapter
+import com.example.seapedia.ui.product.ProductDetailActivity
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [GuestExploreFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class GuestExploreFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding: FragmentGuestExploreBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private val productGridAdapter = ProductGridAdapter()
+
+    private val viewModel: GuestExploreViewModel by viewModels {
+        val sessionManager = SessionManager(requireContext())
+        val apiService = ApiClient.create { sessionManager.getToken() }
+        val repository = GuestRepository(apiService)
+        GuestExploreViewModelFactory(repository)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_guest_explore, container, false)
+    ): View {
+        _binding = FragmentGuestExploreBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment GuestExploreFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            GuestExploreFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView()
+        setupSearchBar()
+        setupSwipeRefresh()
+        observeViewModel()
+
+        productGridAdapter.onItemClick = { product ->
+            val intent = Intent(requireContext(), ProductDetailActivity::class.java)
+            intent.putExtra(ProductDetailActivity.EXTRA_PRODUCT_ID, product.id)
+            startActivity(intent)
+        }
+    }
+
+    private fun setupRecyclerView() {
+        binding.rvProducts.apply {
+            adapter = productGridAdapter
+            layoutManager = GridLayoutManager(requireContext(), 2)
+        }
+    }
+
+    private fun setupSearchBar() {
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.onSearchQuery(s?.toString() ?: "")
             }
+        })
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefreshLayout.apply {
+            setColorSchemeColors(
+                ContextCompat.getColor(requireContext(), R.color.primary)
+            )
+            setOnRefreshListener {
+                val currentQuery = binding.etSearch.text?.toString()
+                viewModel.refresh(currentQuery?.ifBlank { null })
+            }
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.products.observe(viewLifecycleOwner) { products ->
+            productGridAdapter.submitList(products)
+
+            // update result count
+            val query = binding.etSearch.text?.toString()
+            binding.tvResultCount.text = if (!query.isNullOrBlank()) {
+                "${products.size} result(s) for \"$query\""
+            } else {
+                "${products.size} products available"
+            }
+
+            // show empty state if needed
+            binding.layoutEmpty.visibility = if (products.isEmpty()) View.VISIBLE else View.GONE
+            binding.rvProducts.visibility = if (products.isEmpty()) View.GONE else View.VISIBLE
+        }
+
+        viewModel.isRefreshing.observe(viewLifecycleOwner) { isRefreshing ->
+            binding.swipeRefreshLayout.isRefreshing = isRefreshing
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            // subtle — don't show modal on search, just let the list update
+            if (isLoading) {
+                binding.tvResultCount.text = "Searching..."
+            }
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
+            message?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

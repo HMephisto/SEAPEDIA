@@ -54,4 +54,11 @@ class SessionManager (context: Context) {
     fun clearSession() {
         prefs.edit().clear().apply()
     }
+
+    fun saveActiveRole(role: String, roleId: Int) {
+        prefs.edit()
+            .putString(KEY_ACTIVE_ROLE, role)
+            .putInt(KEY_ACTIVE_ROLE_ID, roleId)
+            .apply()
+    }
 }

@@ -17,6 +17,7 @@ import com.example.seapedia.data.utils.SessionManager
 import com.example.seapedia.databinding.FragmentLoginBinding
 import com.example.seapedia.ui.buyer.BuyerMainActivity
 import com.example.seapedia.ui.seller.SellerMainActivity
+import com.seacatering.app.ui.auth.RoleSelectionBottomSheet
 
 
 class LoginFragment : Fragment() {
@@ -69,6 +70,15 @@ class LoginFragment : Fragment() {
                     binding.btnLogin.isEnabled = true
                     binding.btnLogin.text = "Login"
                     Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                }
+
+                is LoginUiState.MultiRole -> {
+                    binding.btnLogin.isEnabled = true
+                    binding.btnLogin.text = "Login"
+                    val bottomSheet = RoleSelectionBottomSheet(state.roles) { selectedRole ->
+                        viewModel.switchRole(selectedRole)
+                    }
+                    bottomSheet.show(parentFragmentManager, "RoleSelection")
                 }
             }
         }

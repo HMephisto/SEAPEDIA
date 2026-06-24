@@ -52,5 +52,8 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.glide)
+    implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.androidx.splashscreen)
 
 }
