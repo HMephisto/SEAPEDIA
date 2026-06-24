@@ -38,4 +38,8 @@
         <item name="windowSplashScreenAnimationDuration">0</item>
         <item name="postSplashScreenTheme">@style/Theme.SEAPEDIA</item>
     </style>
+
+    <style name="App.BottomNav.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/blue</item>
+    </style>
 </resources>

@@ -7,6 +7,14 @@ data class LoginRequest(
     val password: String
 )
 
+data class RegisterRequest(
+    @SerializedName("full_name") val fullName: String,
+    val email: String,
+    val password: String,
+    @SerializedName("password_confirmation") val passwordConfirmation: String,
+    val role: String = RoleConstants.BUYER
+)
+
 data class LoginResponse(
     val user: User,
     val token: String

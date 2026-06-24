@@ -5,6 +5,7 @@ import com.example.seapedia.data.model.LoginRequest
 import com.example.seapedia.data.model.LoginResponse
 import com.example.seapedia.data.model.ProductDetail
 import com.example.seapedia.data.model.ProductResponse
+import com.example.seapedia.data.model.RegisterRequest
 import com.example.seapedia.data.model.ReviewResponse
 import com.example.seapedia.data.model.SwitchRoleRequest
 import com.example.seapedia.data.model.SwitchRoleResponse
@@ -19,10 +20,13 @@ interface ApiService {
     @POST("login")
     suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
 
+    @POST("register")
+    suspend fun register(@Body request: RegisterRequest): Response<LoginResponse>
+
     @POST("logout")
     suspend fun logout(): Response<Unit>
 
-    @POST("switch-role") // adjust to your actual route
+    @POST("switch-role")
     suspend fun switchRole(@Body request: SwitchRoleRequest): Response<SwitchRoleResponse>
 
     @GET("products")

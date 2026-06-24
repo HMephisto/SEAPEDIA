@@ -13,6 +13,7 @@ import com.example.seapedia.R
 import com.example.seapedia.data.model.RoleConstants
 import com.example.seapedia.data.network.ApiClient
 import com.example.seapedia.data.repositrory.AuthRepository
+import com.example.seapedia.data.utils.LoadingDialog
 import com.example.seapedia.data.utils.SessionManager
 import com.example.seapedia.databinding.FragmentLoginBinding
 import com.example.seapedia.ui.buyer.BuyerMainActivity
@@ -23,9 +24,7 @@ import com.seacatering.app.ui.auth.RoleSelectionBottomSheet
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var sessionManager: SessionManager
-
+    private lateinit var loadingDialog: LoadingDialog
     private val viewModel: AuthViewModel by viewModels {
         val sm = SessionManager(requireContext())
         val apiService = ApiClient.create { sm.getToken() }
@@ -44,6 +43,8 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        loadingDialog = LoadingDialog(requireContext())
+
         binding.tvRegister.setOnClickListener {
             findNavController().navigate(R.id.action_login_to_register)
         }
@@ -56,25 +57,21 @@ class LoginFragment : Fragment() {
 
         viewModel.loginState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is LoginUiState.Idle -> { /* no-op */ }
+                is LoginUiState.Idle -> {  }
                 is LoginUiState.Loading -> {
-                    binding.btnLogin.isEnabled = false
-                    binding.btnLogin.text = "Logging in..."
+                    loadingDialog.show("Logging in...")
                 }
                 is LoginUiState.Success -> {
-                    binding.btnLogin.isEnabled = true
-                    binding.btnLogin.text = "Login"
+                    loadingDialog.dismiss()
                     navigateToRoleActivity(state.role)
                 }
                 is LoginUiState.Error -> {
-                    binding.btnLogin.isEnabled = true
-                    binding.btnLogin.text = "Login"
+                    loadingDialog.dismiss()
                     Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                 }
 
                 is LoginUiState.MultiRole -> {
-                    binding.btnLogin.isEnabled = true
-                    binding.btnLogin.text = "Login"
+                    loadingDialog.dismiss()
                     val bottomSheet = RoleSelectionBottomSheet(state.roles) { selectedRole ->
                         viewModel.switchRole(selectedRole)
                     }

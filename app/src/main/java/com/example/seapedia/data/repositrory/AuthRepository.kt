@@ -2,6 +2,7 @@ package com.example.seapedia.data.repositrory
 
 import com.example.seapedia.data.model.LoginRequest
 import com.example.seapedia.data.model.LoginResponse
+import com.example.seapedia.data.model.RegisterRequest
 import com.example.seapedia.data.model.SwitchRoleRequest
 import com.example.seapedia.data.model.SwitchRoleResponse
 import com.example.seapedia.data.network.api.ApiService
@@ -20,6 +21,30 @@ class AuthRepository(private val apiService: ApiService) {
         }
     }
 
+    suspend fun register(
+        fullName: String,
+        email: String,
+        password: String,
+        passwordConfirmation: String
+    ): ApiResult<LoginResponse> {
+        return try {
+            val response = apiService.register(
+                RegisterRequest(
+                    fullName = fullName,
+                    email = email,
+                    password = password,
+                    passwordConfirmation = passwordConfirmation
+                )
+            )
+            if (response.isSuccessful && response.body() != null) {
+                ApiResult.Success(response.body()!!)
+            } else {
+                ApiResult.Error(response.errorBody()?.string() ?: "Registration failed")
+            }
+        } catch (e: Exception) {
+            ApiResult.Error(e.message ?: "Something went wrong")
+        }
+    }
     suspend fun logout(): ApiResult<Unit> {
         return try {
             val response = apiService.logout()

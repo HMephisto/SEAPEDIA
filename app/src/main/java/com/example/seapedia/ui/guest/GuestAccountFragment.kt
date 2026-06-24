@@ -36,5 +36,12 @@ class GuestAccountFragment : Fragment() {
         binding.btnLogin.setOnClickListener {
             startActivity(Intent(requireContext(), AuthActivity::class.java))
         }
+
+        binding.btnCreateAccount.setOnClickListener {
+            val intent = Intent(requireContext(), AuthActivity::class.java).apply {
+                putExtra(AuthActivity.EXTRA_START_DESTINATION, AuthActivity.DESTINATION_REGISTER)
+            }
+            startActivity(intent)
+        }
     }
 }
