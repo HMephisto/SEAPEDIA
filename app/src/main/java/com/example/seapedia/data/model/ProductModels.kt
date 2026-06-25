@@ -1,5 +1,7 @@
 package com.example.seapedia.data.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 data class ProductResponse(
@@ -19,13 +21,72 @@ data class Product(
     @SerializedName("image_url") val imageUrl: String,
     @SerializedName("created_at") val createdAt: String,
     val store: Store
-)
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readInt(),
+        parcel.readInt(),
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readInt(),
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readParcelable(Store::class.java.classLoader)!!
+    )
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(id)
+        parcel.writeInt(storeId)
+        parcel.writeString(name)
+        parcel.writeString(description)
+        parcel.writeString(price)
+        parcel.writeInt(stock)
+        parcel.writeString(imageUrl)
+        parcel.writeString(createdAt)
+        parcel.writeParcelable(store, flags)
+    }
+    override fun describeContents(): Int {
+        return 0
+    }
+    companion object CREATOR : Parcelable.Creator<Product> {
+        override fun createFromParcel(parcel: Parcel): Product {
+            return Product(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Product?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 
 data class Store(
     val id: Int,
     @SerializedName("store_name") val storeName: String,
     @SerializedName("address_detail") val addressDetail: String
-)
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readInt(),
+        parcel.readString() ?: "",
+        parcel.readString() ?: ""
+    )
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(id)
+        parcel.writeString(storeName)
+        parcel.writeString(addressDetail)
+    }
+    override fun describeContents(): Int {
+        return 0
+    }
+    companion object CREATOR : Parcelable.Creator<Store> {
+        override fun createFromParcel(parcel: Parcel): Store {
+            return Store(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Store?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 
 data class ProductDetail(
     val id: Int,

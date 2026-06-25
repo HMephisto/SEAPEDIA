@@ -1,4 +1,4 @@
-package com.example.seapedia.ui.guest.adapter
+package com.example.seapedia.ui.seller.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,34 +8,35 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.seapedia.data.model.Product
 import com.example.seapedia.data.utils.Constants
-import com.example.seapedia.databinding.ItemProductBinding
-
+import com.example.seapedia.databinding.ItemInventoryBinding
 import java.text.NumberFormat
 import java.util.Locale
 
-class ProductAdapter : ListAdapter<Product, ProductAdapter.ViewHolder>(DiffCallback()){
+class InventoryAdapter : ListAdapter<Product, InventoryAdapter.ViewHolder>(DiffCallback()) {
+
+    var onEditClick: ((Product) -> Unit)? = null
+    var onDeleteClick: ((Product) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemProductBinding.inflate(
+        val binding = ItemInventoryBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
         return ViewHolder(binding)
     }
-    var onItemClick: ((Product) -> Unit)? = null
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
-        holder.itemView.setOnClickListener {
-            onItemClick?.invoke(getItem(position))
-        }
+        holder.binding.btnEdit.setOnClickListener { onEditClick?.invoke(getItem(position)) }
+        holder.binding.btnDelete.setOnClickListener { onDeleteClick?.invoke(getItem(position)) }
     }
 
-    class ViewHolder(private val binding: ItemProductBinding) :
+    class ViewHolder(val binding: ItemInventoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(product: Product) {
             binding.tvProductName.text = product.name
             binding.tvProductPrice.text = formatPrice(product.price)
-            binding.tvStoreName.text = product.store.storeName
+            binding.tvStock.text = "Stock: ${product.stock}"
 
             Glide.with(binding.root.context)
                 .load(Constants.IMAGE_URL + product.imageUrl)
@@ -45,8 +46,7 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ViewHolder>(DiffCallb
 
         private fun formatPrice(price: String): String {
             val amount = price.toDoubleOrNull() ?: 0.0
-            val format = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
-            return format.format(amount)
+            return NumberFormat.getCurrencyInstance(Locale("id", "ID")).format(amount)
         }
     }
 

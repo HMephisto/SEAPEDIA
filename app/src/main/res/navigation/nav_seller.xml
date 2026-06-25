@@ -7,20 +7,20 @@
     <fragment
         android:id="@+id/sellerDashboardFragment"
         android:name="com.example.seapedia.ui.seller.SellerDashboardFragment"
-        android:label="Dashboard" />
+        android:label="Seller Seapedia" />
 
     <fragment
         android:id="@+id/sellerInventoryFragment"
         android:name="com.example.seapedia.ui.seller.SellerInventoryFragment"
-        android:label="Inventory" />
+        android:label="Seller Seapedia" />
 
     <fragment
         android:id="@+id/sellerOrdersFragment"
         android:name="com.example.seapedia.ui.seller.SellerOrdersFragment"
-        android:label="Orders" />
+        android:label="Seller Seapedia" />
 
     <fragment
         android:id="@+id/sellerSettingsFragment"
         android:name="com.example.seapedia.ui.seller.SellerSettingsFragment"
-        android:label="Settings" />
+        android:label="Seller Seapedia" />
 </navigation>

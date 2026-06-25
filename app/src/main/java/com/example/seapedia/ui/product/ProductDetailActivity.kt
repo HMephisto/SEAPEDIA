@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.seapedia.data.model.ProductDetail
 import com.example.seapedia.data.network.ApiClient
 import com.example.seapedia.data.repositrory.GuestRepository
+import com.example.seapedia.data.utils.Constants
 import com.example.seapedia.data.utils.LoadingDialog
 import com.example.seapedia.data.utils.SessionManager
 import com.example.seapedia.databinding.ActivityProductDetailBinding
@@ -108,7 +109,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun bindProduct(product: ProductDetail) {
         Glide.with(this)
-            .load(product.imageUrl)
+            .load(Constants.IMAGE_URL + product.imageUrl)
             .placeholder(android.R.drawable.ic_menu_gallery)
             .into(binding.ivProduct)
 

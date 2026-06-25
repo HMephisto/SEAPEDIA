@@ -50,6 +50,14 @@ data class UserRole(
     val pivot: RolePivot
 )
 
+data class AddRoleRequest(
+    val role: String
+)
+
+data class AddRoleResponse(
+    val user: User
+)
+
 data class RolePivot(
     @SerializedName("user_id") val userId: Int,
     @SerializedName("role_id") val roleId: Int

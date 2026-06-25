@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.seapedia.data.model.Product
+import com.example.seapedia.data.utils.Constants
 import com.example.seapedia.databinding.ItemProductGridBinding
 import java.text.NumberFormat
 import java.util.Locale
@@ -38,7 +39,7 @@ class ProductGridAdapter : ListAdapter<Product, ProductGridAdapter.ViewHolder>(D
             binding.tvStoreName.text = product.store.storeName
 
             Glide.with(binding.root.context)
-                .load(product.imageUrl)
+                .load(Constants.IMAGE_URL + product.imageUrl)
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .into(binding.ivProduct)
         }

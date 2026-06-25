@@ -17,6 +17,7 @@ class SessionManager (context: Context) {
         private const val KEY_EMAIL = "email"
         private const val KEY_ACTIVE_ROLE = "active_role"
         private const val KEY_ACTIVE_ROLE_ID = "active_role_id"
+        private const val KEY_USER_ROLES = "user_roles"
     }
 
     fun saveSession(
@@ -25,7 +26,8 @@ class SessionManager (context: Context) {
         fullName: String,
         email: String,
         activeRole: String,
-        activeRoleId: Int
+        activeRoleId: Int,
+        roles: List<String>
     ) {
         prefs.edit()
             .putString(KEY_TOKEN, token)
@@ -34,6 +36,7 @@ class SessionManager (context: Context) {
             .putString(KEY_EMAIL, email)
             .putString(KEY_ACTIVE_ROLE, activeRole)
             .putInt(KEY_ACTIVE_ROLE_ID, activeRoleId)
+            .putString(KEY_USER_ROLES, roles.joinToString(","))
             .apply()
     }
 
@@ -60,5 +63,14 @@ class SessionManager (context: Context) {
             .putString(KEY_ACTIVE_ROLE, role)
             .putInt(KEY_ACTIVE_ROLE_ID, roleId)
             .apply()
+    }
+
+    fun saveUserRoles(roles: List<String>) {
+        prefs.edit().putString(KEY_USER_ROLES, roles.joinToString(",")).apply()
+    }
+
+    fun getUserRoles(): List<String> {
+        val raw = prefs.getString(KEY_USER_ROLES, "") ?: ""
+        return if (raw.isBlank()) emptyList() else raw.split(",")
     }
 }

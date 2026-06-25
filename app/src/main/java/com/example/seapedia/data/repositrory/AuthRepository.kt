@@ -1,5 +1,7 @@
 package com.example.seapedia.data.repositrory
 
+import com.example.seapedia.data.model.AddRoleRequest
+import com.example.seapedia.data.model.AddRoleResponse
 import com.example.seapedia.data.model.LoginRequest
 import com.example.seapedia.data.model.LoginResponse
 import com.example.seapedia.data.model.RegisterRequest
@@ -65,6 +67,19 @@ class AuthRepository(private val apiService: ApiService) {
                 ApiResult.Success(response.body()!!)
             } else {
                 ApiResult.Error(response.errorBody()?.string() ?: "Failed to switch role")
+            }
+        } catch (e: Exception) {
+            ApiResult.Error(e.message ?: "Something went wrong")
+        }
+    }
+
+    suspend fun addRole(role: String): ApiResult<AddRoleResponse> {
+        return try {
+            val response = apiService.addRole(AddRoleRequest(role))
+            if (response.isSuccessful && response.body() != null) {
+                ApiResult.Success(response.body()!!)
+            } else {
+                ApiResult.Error(response.errorBody()?.string() ?: "Failed to add role")
             }
         } catch (e: Exception) {
             ApiResult.Error(e.message ?: "Something went wrong")

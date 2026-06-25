@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.seapedia.data.model.RoleConstants
 import com.example.seapedia.data.model.UserRole
 import com.example.seapedia.data.repositrory.ApiResult
 import com.example.seapedia.data.repositrory.AuthRepository
@@ -54,7 +55,8 @@ class AuthViewModel (
                         fullName = user.fullName,
                         email = user.email,
                         activeRole = user.activeRole.name,
-                        activeRoleId = user.activeRoleId
+                        activeRoleId = user.activeRoleId,
+                        roles = user.roles.map { it.name }
                     )
 
                     if (user.roles.size > 1) {
@@ -106,7 +108,8 @@ class AuthViewModel (
                         fullName = user.fullName,
                         email = user.email,
                         activeRole = user.activeRole.name,
-                        activeRoleId = user.activeRoleId
+                        activeRoleId = user.activeRoleId,
+                        roles = listOf(RoleConstants.BUYER)
                     )
                     _registerState.value = RegisterUiState.Success(user.activeRole.name)
                 }

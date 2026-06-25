@@ -2,16 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/sellerDashboardFragment"
+        android:icon="@drawable/ic_sellerdashboard"
         android:title="Dashboard" />
 
     <item
         android:id="@+id/sellerInventoryFragment"
+        android:icon="@drawable/ic_sellerinventory"
         android:title="Inventory" />
 
     <item
         android:id="@+id/sellerOrdersFragment"
+        android:icon="@drawable/ic_buyer"
         android:title="Orders" />
     <item
         android:id="@+id/sellerSettingsFragment"
+        android:icon="@drawable/ic_sellersettings"
         android:title="Settings" />
 </menu>

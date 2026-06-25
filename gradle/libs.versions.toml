@@ -36,4 +36,5 @@ androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", v
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-parcelize = { id = "kotlin-parcelize" }
 
