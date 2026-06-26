@@ -40,24 +40,6 @@ class SellerSettingsViewModel(
     private val _store = MutableLiveData<com.example.seapedia.data.model.SellerStore>()
     val store: LiveData<com.example.seapedia.data.model.SellerStore> = _store
 
-    // roles the user can switch to or add (not SELLER since that's current, not ADMIN)
-    val switchableRoles: List<RoleItem>
-        get() {
-            val userRoles = sessionManager.getUserRoles()
-            return listOf(
-                RoleItem(
-                    role = RoleConstants.BUYER,
-                    displayName = "Buyer",
-                    hasRole = userRoles.contains(RoleConstants.BUYER)
-                ),
-                RoleItem(
-                    role = RoleConstants.DRIVER,
-                    displayName = "Driver",
-                    hasRole = userRoles.contains(RoleConstants.DRIVER)
-                )
-            )
-        }
-
     init {
         loadStore()
     }
@@ -93,46 +75,6 @@ class SellerSettingsViewModel(
                     _state.value = SettingsState.StoreUpdated
                 }
                 is ApiResult.Error -> _state.value = SettingsState.Error(result.message)
-            }
-        }
-    }
-
-    fun handleRoleAction(roleItem: RoleItem) {
-        viewModelScope.launch {
-            _state.value = SettingsState.Loading
-            if (roleItem.hasRole) {
-                // already has role → just switch
-                val result = authRepository.switchRole(roleItem.role)
-                when (result) {
-                    is ApiResult.Success -> {
-                        val user = result.data.user
-                        sessionManager.saveActiveRole(user.activeRole.name, user.activeRoleId)
-                        _state.value = SettingsState.RoleSwitched(roleItem.role)
-                    }
-                    is ApiResult.Error -> _state.value = SettingsState.Error(result.message)
-                }
-            } else {
-                // doesn't have role → add it first then switch
-                val addResult = authRepository.addRole(roleItem.role)
-                when (addResult) {
-                    is ApiResult.Success -> {
-                        // save updated roles list to session
-                        val updatedRoles = addResult.data.user.roles.map { it.name }
-                        sessionManager.saveUserRoles(updatedRoles)
-
-                        // now switch to the new role
-                        val switchResult = authRepository.switchRole(roleItem.role)
-                        when (switchResult) {
-                            is ApiResult.Success -> {
-                                val user = switchResult.data.user
-                                sessionManager.saveActiveRole(user.activeRole.name, user.activeRoleId)
-                                _state.value = SettingsState.RoleAdded(roleItem.role)
-                            }
-                            is ApiResult.Error -> _state.value = SettingsState.Error(switchResult.message)
-                        }
-                    }
-                    is ApiResult.Error -> _state.value = SettingsState.Error(addResult.message)
-                }
             }
         }
     }

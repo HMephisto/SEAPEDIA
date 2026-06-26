@@ -15,6 +15,7 @@ import com.example.seapedia.data.repositrory.StoreRepository
 import com.example.seapedia.data.utils.LoadingDialog
 import com.example.seapedia.data.utils.SessionManager
 import com.example.seapedia.databinding.FragmentSellerSettingsBinding
+import com.example.seapedia.ui.SwitchRoleBottomSheet
 import com.example.seapedia.ui.auth.AuthActivity
 import com.example.seapedia.ui.auth.AuthViewModel
 import com.example.seapedia.ui.auth.AuthViewModelFactory
@@ -51,26 +52,8 @@ class SellerSettingsFragment : Fragment() {
 
         loadingDialog = LoadingDialog(requireContext())
 
-        setupRoleItems()
         setupClickListeners()
         observeViewModel()
-    }
-
-    private fun setupRoleItems() {
-        val roles = viewModel.switchableRoles
-
-        val buyer = roles.find { it.role == RoleConstants.BUYER }
-        val driver = roles.find { it.role == RoleConstants.DRIVER }
-
-        buyer?.let {
-            binding.tvBuyerStatus.text = if (it.hasRole) "Already have this role" else "You don't have this role yet"
-            binding.tvBuyerAction.text = if (it.hasRole) "Switch" else "Add & Switch"
-        }
-
-        driver?.let {
-            binding.tvDriverStatus.text = if (it.hasRole) "Already have this role" else "You don't have this role yet"
-            binding.tvDriverAction.text = if (it.hasRole) "Switch" else "Add & Switch"
-        }
     }
 
     private fun setupClickListeners() {
@@ -81,14 +64,11 @@ class SellerSettingsFragment : Fragment() {
             viewModel.updateStore(storeName, description, address)
         }
 
-        binding.layoutBuyer.setOnClickListener {
-            val buyer = viewModel.switchableRoles.find { it.role == RoleConstants.BUYER }
-            buyer?.let { viewModel.handleRoleAction(it) }
-        }
-
-        binding.layoutDriver.setOnClickListener {
-            val driver = viewModel.switchableRoles.find { it.role == RoleConstants.DRIVER }
-            driver?.let { viewModel.handleRoleAction(it) }
+        binding.layoutSwitchRole.setOnClickListener {
+            val bottomSheet = SwitchRoleBottomSheet { role ->
+                navigateToRole(role)
+            }
+            bottomSheet.show(parentFragmentManager, "SwitchRole")
         }
 
         binding.btnLogout.setOnClickListener {

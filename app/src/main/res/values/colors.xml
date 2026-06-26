@@ -23,4 +23,5 @@
     <color name="role_admin">#212121</color>
 
     <color name="warning">#F44336</color>
+    <color name="success">#00FF18</color>
 </resources>

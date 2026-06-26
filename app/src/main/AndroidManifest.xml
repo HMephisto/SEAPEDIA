@@ -15,9 +15,19 @@
         android:theme="@style/Theme.SEAPEDIA"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.seller.ProductFormActivity"
+            android:name=".ui.buyer.AddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.buyer.AddressFormActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".ui.buyer.WalletActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.seller.ProductFormActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.seller.StoreSetupActivity"
             android:exported="false" />
