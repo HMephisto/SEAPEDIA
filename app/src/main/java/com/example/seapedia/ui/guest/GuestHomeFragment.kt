@@ -84,7 +84,11 @@ class GuestHomeFragment : Fragment() {
         binding.tvSeeAll.setOnClickListener {
             requireActivity().findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(
                 R.id.bottomNavigationView
-            ).selectedItemId = R.id.guestExploreFragment
+            ).selectedItemId = if (isLoggedIn) {
+                R.id.buyerExploreFragment
+            } else {
+                R.id.guestExploreFragment
+            }
         }
 
         if (isLoggedIn) {
@@ -95,7 +99,6 @@ class GuestHomeFragment : Fragment() {
             }
         } else {
             binding.ratingBarInput.setIsIndicator(true)
-            binding.etName.isEnabled = false
             binding.etComment.isEnabled = false
 
             binding.btnSubmitReview.text = "Login to Submit a Review"

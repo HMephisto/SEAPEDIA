@@ -3,7 +3,12 @@
     <item
         android:id="@+id/buyerHomeFragment"
         android:icon="@drawable/ic_guesthome"
-        android:title="Home" />
+        android:title="Home " />
+
+    <item
+        android:id="@+id/buyerExploreFragment"
+        android:icon="@drawable/ic_guestexplore"
+        android:title="Explore" />
 
     <item
         android:id="@+id/buyerCartFragment"

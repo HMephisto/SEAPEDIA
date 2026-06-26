@@ -127,7 +127,6 @@ class ProductFormActivity : AppCompatActivity() {
                         if (editProduct != null) "Product updated!" else "Product created!",
                         Toast.LENGTH_SHORT
                     ).show()
-                    // tell the inventory fragment to refresh
                     setResult(RESULT_OK, Intent().putExtra(RESULT_SAVED, true))
                     finish()
                 }

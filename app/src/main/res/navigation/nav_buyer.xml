@@ -3,23 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_buyer"
     app:startDestination="@id/buyerHomeFragment">
+
     <fragment
         android:id="@+id/buyerHomeFragment"
-        android:name="com.example.seapedia.ui.buyer.BuyerHomeFragment"
-        android:label="Home" />
+        android:name="com.example.seapedia.ui.guest.GuestHomeFragment"
+        android:label="Buyer Home" />
+
+    <fragment
+        android:id="@+id/buyerExploreFragment"
+        android:name="com.example.seapedia.ui.guest.GuestExploreFragment"
+        android:label="Buyer Explore" />
 
     <fragment
         android:id="@+id/buyerCartFragment"
         android:name="com.example.seapedia.ui.buyer.BuyerCartFragment"
-        android:label="Cart" />
+        android:label="Buyer Cart" />
 
     <fragment
         android:id="@+id/buyerOrdersFragment"
         android:name="com.example.seapedia.ui.buyer.BuyerOrdersFragment"
-        android:label="Orders" />
+        android:label="Buyer Orders" />
 
     <fragment
         android:id="@+id/buyerProfileFragment"
         android:name="com.example.seapedia.ui.buyer.BuyerProfileFragment"
-        android:label="Profile" />
+        android:label="Buyer Profile" />
 </navigation>

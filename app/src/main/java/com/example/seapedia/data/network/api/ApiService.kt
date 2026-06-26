@@ -3,9 +3,11 @@ package com.example.seapedia.data.network.api
 import com.example.seapedia.data.model.AddReviewRequest
 import com.example.seapedia.data.model.AddRoleRequest
 import com.example.seapedia.data.model.AddRoleResponse
+import com.example.seapedia.data.model.AddToCartRequest
 import com.example.seapedia.data.model.AddressPostResponse
 import com.example.seapedia.data.model.AddressRequest
 import com.example.seapedia.data.model.AddressResponse
+import com.example.seapedia.data.model.CartResponse
 import com.example.seapedia.data.model.CreateProductRequest
 import com.example.seapedia.data.model.CreateProductResponse
 import com.example.seapedia.data.model.CreateStoreRequest
@@ -24,6 +26,7 @@ import com.example.seapedia.data.model.SwitchRoleResponse
 import com.example.seapedia.data.model.TopUpRequest
 import com.example.seapedia.data.model.TopUpResponse
 import com.example.seapedia.data.model.TransactionResponse
+import com.example.seapedia.data.model.UpdateCartRequest
 import com.example.seapedia.data.model.WalletResponse
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -31,6 +34,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
@@ -108,4 +112,22 @@ interface ApiService {
 
     @POST("addresses/{id}/set-default")
     suspend fun setDefaultAddress(@Path("id") id: Int): Response<AddressPostResponse>
+
+    @GET("cart")
+    suspend fun getCart(): Response<CartResponse>
+
+    @POST("cart/items")
+    suspend fun addToCart(@Body request: AddToCartRequest): Response<Any>
+
+    @PATCH("cart/items/{itemId}")
+    suspend fun updateCartItem(
+        @Path("itemId") itemId: Int,
+        @Body request: UpdateCartRequest
+    ): Response<Any>
+
+    @DELETE("cart/items/{itemId}")
+    suspend fun removeCartItem(@Path("itemId") itemId: Int): Response<Any>
+
+    @DELETE("cart")
+    suspend fun clearCart(): Response<Any>
 }

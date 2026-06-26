@@ -23,7 +23,7 @@ class ProductFormViewModel(private val repository: StoreRepository) : ViewModel(
 
     fun saveProduct(
         storeId: Int,
-        productId: Int?,  // null = create, non-null = edit
+        productId: Int?,
         name: String,
         description: String,
         price: String,

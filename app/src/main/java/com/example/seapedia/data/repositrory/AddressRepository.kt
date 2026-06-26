@@ -73,7 +73,7 @@ class AddressRepository(private val apiService: ApiService){
         }
     }
 
-    suspend fun setDefaultAddress(id: Int): ApiResult<AddressResponse> {
+    suspend fun setDefaultAddress(id: Int): ApiResult<AddressPostResponse> {
         return try {
             val response = apiService.setDefaultAddress(id)
             if (response.isSuccessful && response.body() != null) {

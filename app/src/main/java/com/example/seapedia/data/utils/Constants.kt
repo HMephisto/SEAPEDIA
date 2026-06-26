@@ -1,8 +1,8 @@
 package com.example.seapedia.data.utils
 
 object Constants {
-    const val BASE_URL = "https://5b67-2404-c0-a702-58ec-7945-55cb-f769-814a.ngrok-free.app/api/"
-    const val IMAGE_URL = "https://5b67-2404-c0-a702-58ec-7945-55cb-f769-814a.ngrok-free.app/storage/"
+    const val BASE_URL = "https://df58-103-112-189-131.ngrok-free.app/api/"
+    const val IMAGE_URL = "https://df58-103-112-189-131.ngrok-free.app/storage/"
     const val PREF_NAME = "seapedia_prefs"
     const val KEY_TOKEN = "token"
     const val KEY_USER_ID = "user_id"

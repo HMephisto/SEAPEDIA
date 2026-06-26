@@ -34,6 +34,7 @@ class BuyerMainActivity : AppCompatActivity() {
             setOf(
                 R.id.buyerHomeFragment,
                 R.id.buyerCartFragment,
+                R.id.buyerExploreFragment,
                 R.id.buyerOrdersFragment,
                 R.id.buyerProfileFragment
             )

@@ -8,15 +8,20 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.seapedia.data.model.ProductDetail
 import com.example.seapedia.data.network.ApiClient
+import com.example.seapedia.data.repositrory.ApiResult
+import com.example.seapedia.data.repositrory.CartRepository
 import com.example.seapedia.data.repositrory.GuestRepository
 import com.example.seapedia.data.utils.Constants
 import com.example.seapedia.data.utils.LoadingDialog
 import com.example.seapedia.data.utils.SessionManager
 import com.example.seapedia.databinding.ActivityProductDetailBinding
 import com.example.seapedia.ui.auth.AuthActivity
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -26,11 +31,15 @@ class ProductDetailActivity : AppCompatActivity() {
     private lateinit var loadingDialog: LoadingDialog
     private lateinit var sessionManager: SessionManager
 
+    private lateinit var cartRepository: CartRepository
+    private lateinit var guestRepository: GuestRepository
+
     private val viewModel: ProductDetailViewModel by viewModels {
         val sm = SessionManager(this)
         val apiService = ApiClient.create { sm.getToken() }
-        val repository = GuestRepository(apiService)
-        ProductDetailViewModelFactory(repository)
+        guestRepository = GuestRepository(apiService)
+        cartRepository = CartRepository(apiService)
+        ProductDetailViewModelFactory(guestRepository, cartRepository)
     }
 
     companion object {
@@ -48,6 +57,8 @@ class ProductDetailActivity : AppCompatActivity() {
         setupToolbar()
         setupActionButtons()
         observeViewModel()
+
+
 
         val productId = intent.getIntExtra(EXTRA_PRODUCT_ID, -1)
         if (productId == -1) {
@@ -74,8 +85,8 @@ class ProductDetailActivity : AppCompatActivity() {
             binding.btnLogin.visibility = View.GONE
 
             binding.btnAddToCart.setOnClickListener {
-                // TODO: wire up when cart endpoint is ready
-                Toast.makeText(this, "Cart coming soon!", Toast.LENGTH_SHORT).show()
+                val productId = intent.getIntExtra(EXTRA_PRODUCT_ID, -1)
+                viewModel.addToCart(productId)
             }
         } else {
             binding.layoutGuestNotice.visibility = View.VISIBLE
@@ -105,6 +116,28 @@ class ProductDetailActivity : AppCompatActivity() {
                 }
             }
         }
+
+        viewModel.addToCartState.observe(this) { state ->
+            when (state){
+                is AddToCartUiState.Loading -> {
+                    loadingDialog.show("Loading...")
+                    binding.btnAddToCart.isEnabled = false
+                }
+                is AddToCartUiState.Success-> {
+                    loadingDialog.dismiss()
+                    Toast.makeText(
+                        this,
+                        "Added to cart!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                is AddToCartUiState.Error -> {
+                    loadingDialog.dismiss()
+                    binding.btnAddToCart.isEnabled = true
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun bindProduct(product: ProductDetail) {
@@ -118,7 +151,6 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.tvStock.text = "${product.stock} items available"
         binding.tvDescription.text = product.description
 
-        // Seller info
         binding.tvStoreName.text = product.store.storeName
         binding.tvSellerName.text = "by ${product.store.seller.fullName}"
         binding.tvStoreAddress.text = product.store.addressDetail

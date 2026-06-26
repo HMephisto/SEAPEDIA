@@ -91,7 +91,6 @@ class GuestExploreFragment : Fragment() {
         viewModel.products.observe(viewLifecycleOwner) { products ->
             productGridAdapter.submitList(products)
 
-            // update result count
             val query = binding.etSearch.text?.toString()
             binding.tvResultCount.text = if (!query.isNullOrBlank()) {
                 "${products.size} result(s) for \"$query\""
@@ -99,7 +98,6 @@ class GuestExploreFragment : Fragment() {
                 "${products.size} products available"
             }
 
-            // show empty state if needed
             binding.layoutEmpty.visibility = if (products.isEmpty()) View.VISIBLE else View.GONE
             binding.rvProducts.visibility = if (products.isEmpty()) View.GONE else View.VISIBLE
         }
@@ -109,7 +107,6 @@ class GuestExploreFragment : Fragment() {
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            // subtle — don't show modal on search, just let the list update
             if (isLoading) {
                 binding.tvResultCount.text = "Searching..."
             }
